@@ -19,11 +19,20 @@
       // Focus on the reply box
       replyBox.focus();
 
-      // Replace or set the innerHTML to your desired text
-      const text = "Test reply from script!";
+      // Step 3: Extract the text of the message being replied to
+      const originalMessage = document.querySelector('.a3s.aiL'); // Adjust selector as needed
+      let messageText = "Could not find the original message.";
+      if (originalMessage) {
+        // Extract the text while maintaining line breaks
+        const messageHTML = originalMessage.innerHTML.trim();
+        messageText = messageHTML
+          .replace(/(?:\r\n|\r|\n)/g, "<br>") // Ensure any text-based line breaks are converted to <br>
+          .replace(/\s+/g, " "); // Clean up excessive whitespace
+      }
 
-      if (text !== replyBox.innerHTML.trim()){
-        replyBox.innerHTML = text;
+      // Step 4: Replace or set the innerHTML to the message text
+      if (messageText !== replyBox.innerHTML.trim()) {
+        replyBox.innerHTML = messageText;
 
         // Dispatch an input event so Gmail recognizes the new content
         const inputEvent = new Event("input", {
@@ -34,18 +43,15 @@
 
         console.log("Reply written successfully!");
       } else {
-        console.log("Text already there: sleeping")
-        sleep(1000)
+        console.log("Text already there: sleeping");
+        sleep(1000);
       }
-      
-
     }, 1000); // Delay to allow the reply box to load
   } else {
     console.log("Reply button not found.");
   }
 })();
 
-
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
