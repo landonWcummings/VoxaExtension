@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "VOXA",
+  "version": "1.0",
+  "description": "Automatically writes a reply to emails.",
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "storage"
+  ],
+  "web_accessible_resources": [
+  {
+    "resources": ["content.js"],
+    "matches": ["https://mail.google.com/*"]
+  }
+  ],
+  "host_permissions": [
+    "https://mail.google.com/*"  
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
