@@ -1,12 +1,40 @@
-(function () {
-  // Step 1: Find the reply button and click it
+(async function () {
+  async function callApi(text) {
+    const url = "https://aeed-64-149-153-183.ngrok-free.app/generate";
+  
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
+  
+      console.log("API received: ", response);
+  
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+  
+      // Read the response JSON only once
+      const data = await response.json();
+      console.log("API response body: ", data);
+  
+      // Return the specific text field if it exists
+      return data.response || "Failed to get response.";
+    } catch (error) {
+      console.error("Error during API call:", error);
+      throw error;
+    }
+  }
+  
+
   const replyButton = document.querySelector('div[aria-label="Reply"]');
   if (replyButton) {
     replyButton.click();
 
-    // Step 2: Wait for the reply box to appear and input text
-    setTimeout(() => {
-      // Use a more direct selector to find the contenteditable reply div
+    setTimeout(async () => {
       const replyBox = document.querySelector(
         'div.Am.aiL.aO9.Al.editable.LW-avf.tS-tW[contenteditable="true"]'
       );
@@ -16,42 +44,26 @@
         return;
       }
 
-      // Focus on the reply box
-      replyBox.focus();
+      replyBox.innerHTML = "loading";
+      const inputEvent = new Event("input", { bubbles: true, cancelable: true });
+      replyBox.dispatchEvent(inputEvent);
 
-      // Step 3: Extract the text of the message being replied to
-      const originalMessage = document.querySelector('.a3s.aiL'); // Adjust selector as needed
+      const originalMessage = document.querySelector('.a3s.aiL');
       let messageText = "Could not find the original message.";
       if (originalMessage) {
-        // Extract the text while maintaining line breaks
-        const messageHTML = originalMessage.innerHTML.trim();
-        messageText = messageHTML
-          .replace(/(?:\r\n|\r|\n)/g, "<br>") // Ensure any text-based line breaks are converted to <br>
-          .replace(/\s+/g, " "); // Clean up excessive whitespace
+        messageText = originalMessage.innerText.trim().replace(/\s+/g, " ");
       }
 
-      // Step 4: Replace or set the innerHTML to the message text
-      if (messageText !== replyBox.innerHTML.trim()) {
-        replyBox.innerHTML = messageText;
-
-        // Dispatch an input event so Gmail recognizes the new content
-        const inputEvent = new Event("input", {
-          bubbles: true,
-          cancelable: true,
-        });
+      try {
+        const apiResponse = await callApi(messageText);
+        replyBox.innerHTML = apiResponse;
         replyBox.dispatchEvent(inputEvent);
-
-        console.log("Reply written successfully!");
-      } else {
-        console.log("Text already there: sleeping");
-        sleep(1000);
+      } catch {
+        replyBox.innerHTML = "Error generating response.";
+        replyBox.dispatchEvent(inputEvent);
       }
-    }, 1000); // Delay to allow the reply box to load
+    }, 1000);
   } else {
     console.log("Reply button not found.");
   }
 })();
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
