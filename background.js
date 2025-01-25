@@ -3,6 +3,13 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 let isWorking = false;
+// Listen for messages from the popup or other parts of the extension
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "getWorkingState") {
+    sendResponse({ isWorking });
+  }
+});
+
 
 // Listen for changes to the `working` state
 chrome.storage.onChanged.addListener((changes, area) => {

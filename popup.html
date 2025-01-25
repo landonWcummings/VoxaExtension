@@ -58,10 +58,25 @@
     input:checked + .slider:before {
       transform: translateX(20px);
     }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      font-size: 2em;
+      font-weight: bold;
+    }
+    .logo img {
+      width: 0.8em;
+      height: 0.8em;
+      margin: 0 0.1em;
+    }
   </style>
 </head>
 <body>
-  <h1><a href="https://voxa.com" target="_blank">VOXA</a></h1>
+  <h1 class="logo">
+    <a href="https://voxa.com" target="_blank">
+      V<img src="icons/32logo.png" alt="O" />XA
+    </a>
+  </h1>
   
   <!-- Slider Section -->
   <div class="slider-container">
@@ -71,5 +86,7 @@
     </label>
     <label for="workingSlider" class="slider-label">Working</label>
   </div>
+  <p id="statusText">Loading...</p>
+  
 </body>
 </html>

@@ -9,18 +9,25 @@
     "storage"
   ],
   "web_accessible_resources": [
-  {
-    "resources": ["content.js"],
-    "matches": ["https://mail.google.com/*"]
-  }
+    {
+      "resources": ["content.js"],
+      "matches": ["https://mail.google.com/*"]
+    }
   ],
   "host_permissions": [
-    "https://mail.google.com/*"  
+    "https://mail.google.com/*"
   ],
   "action": {
     "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/16logo.png",
+    "32": "icons/32logo.png",
+    "48": "icons/48logo.png",
+    "64": "icons/64logo.png",
+    "128": "icons/128logo.png"
   }
 }
